@@ -287,7 +287,7 @@ available via the respective Linux distribution package management
 system, i.e. "yum" on RedHat and derivatives, or "apt-get" on Debian and
 derivatives. For other operating systems, the cmake tool is available in
 source and binary form from <http://cmake.org>. OSAL requires at least
-version 2.6.4 of the cmake tool. 
+version 3.5 of the cmake tool. 
 
 ### Variables that must be specified
 

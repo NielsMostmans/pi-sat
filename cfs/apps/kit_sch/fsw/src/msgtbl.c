@@ -120,7 +120,7 @@ bool MSGTBL_LoadCmd(TBLMGR_Tbl *Tbl, uint8 LoadType, const char* Filename)
    int obj, msg;
    
    CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
-                     "MSGTBL_LoadCmd() Entry. sizeof(MsgTbl->Tbl) = %d\n",sizeof(MsgTbl->Tbl));
+                     "MSGTBL_LoadCmd() Entry. sizeof(MsgTbl->Tbl) = %ld\n",sizeof(MsgTbl->Tbl));
    
    /* 
    ** Reset status, object modified flags, and data. A non-zero BufLim
@@ -317,7 +317,7 @@ bool MSGTBL_DumpCmd(TBLMGR_Tbl *Tbl, uint8 DumpType, const char* Filename)
          if (DataWords > (uint8)(MSGTBL_MAX_MSG_WORDS)) {
             
             CFE_EVS_SendEvent(MSGTBL_DUMP_MSG_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Error creating dump file message entry %d. Message word length %d is greater than max data buffer %d",
+                              "Error creating dump file message entry %d. Message word length %d is greater than max data buffer %ld",
                               i, DataWords, PKTUTIL_PRI_HDR_WORDS);         
          }
          else {
@@ -532,17 +532,13 @@ static bool MsgCallback (void* UserData, int TokenIdx)
 **   3. Minus: Modifies caller's string
 */
 static char *SplitStr(char *Str, const char *Delim) {
-   
-   static char *StaticStr=NULL;      /* Store last address */
+
    int i=0, StrLength=0;
    bool    DelimFound = false;                  
 
    /* Valid Delim and have characters left */
-   if (Delim == NULL || (Str == NULL && StaticStr == NULL))
+   if (Delim == NULL || Str == NULL)
       return NULL;
-
-   if (Str == NULL)
-      Str = StaticStr;
 
    StrLength = strlen(&Str[StrLength]);
 
@@ -555,13 +551,11 @@ static char *SplitStr(char *Str, const char *Delim) {
    }
    
    if (!DelimFound) {
-      StaticStr = NULL;
       return Str;
    }
 
    /* Check for consecutive delimiters */
    if (Str[0] == Delim[0]) {
-      StaticStr = (Str + 1);
       return (char *)Delim;
    }
 
@@ -570,12 +564,6 @@ static char *SplitStr(char *Str, const char *Delim) {
     * be char[] rather than *char
     */
    Str[i] = '\0';
-
-   /* save the rest of the string */
-   if ((Str + i + 1) != 0)
-      StaticStr = (Str + i + 1);
-   else
-      StaticStr = NULL;
 
    return Str;
 

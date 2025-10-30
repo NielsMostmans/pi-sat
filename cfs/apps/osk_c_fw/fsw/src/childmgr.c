@@ -264,7 +264,7 @@ bool CHILDMGR_InvokeChildCmd(void* ObjDataPtr, const CFE_SB_Buffer_t*  SbBufPtr)
       }/* End if valid message length */
       else {
          
-         sprintf(EventErrStr, "Error dispatching commmand function %d. Command message length %d exceed max %d",
+         sprintf(EventErrStr, "Error dispatching commmand function %d. Command message length %ld exceed max %ld",
             FuncCode, MsgLen, sizeof(CHILDMGR_CmdQ_Entry));
       
       }
@@ -586,7 +586,7 @@ static CHILDMGR_Class* GetChildMgrInstance(void)
 static void AppendIdToStr(char* NewStr, const char* BaseStr)
 {
    
-   char IdStr[5];
+   char IdStr[6];
    
    strncpy(NewStr,BaseStr,OS_MAX_API_NAME-3);
    sprintf(IdStr,"%d",NameStrId++);
